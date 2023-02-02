@@ -10,18 +10,21 @@ app.use(express.urlencoded({extended: true})) // Permite la busqueda de url comp
 
 // Se generan las rutas 
 
-// Ruta para obtener todos los productos
-app.get('/product',async (req,res)=>{
-       
-    const {category} = req.query;
-    console.log(category)
+// Ruta para obtener todos los productos incluyendo un query con el parametro limite
+app.get('/products',async (req,res)=>{
+    
     const productos = await productManager.getProducts()
-    res.send(JSON.stringify(productos))
+    let {limite} = req.query;
+    if(limite) {
+        console.log(productos.slice(0,limite))
+    }   else {
+        console.log(productos)  // Solo se muestra el console.log a esta consulta. No se renderiza
+    }
 })
 
 // Ruta para obtener el producto con un ID especifico
 
-app.get('/product/:id', async (req,res)=>{
+app.get('/products/:id', async (req,res)=>{
     const productos = await productManager.getProductByID(req.params.id)
     console.log(productos)
     res.send(JSON.stringify(productos))
